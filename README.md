@@ -7,14 +7,14 @@ documented
 
 ## Structure
 This repository is split into four packages:
-+   main
++   main:
     Contains code for the binary with flag parsing game-mode selection and the
     actual gamemodes.
-+   utils
++   utils:
     Some functions that makes handling user interaction easy.
-+   gox
++   gox:
     Contains all type definitons for the board and game
-+   ai
++   ai:
     This is a tiny artifical inteligence. It rates fields on a simple pre-defiend
     value but most importantly it checks for wins or ties. It then uses the negamax-
     algortihm with varable search depth to determine the next move. It is suprisingly
