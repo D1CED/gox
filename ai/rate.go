@@ -1,6 +1,6 @@
 package ai
 
-import "gox/gox"
+import "github.com/D1CED/gox/gox"
 
 // Score is a pseudo value rating a cell of a game. Higher values means more
 // likelyhood to win.

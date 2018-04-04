@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"gox/gox"
+	"github.com/D1CED/gox/gox"
 )
 
 // PrintWinDraw returns true if win or draw happend and prints this on screen.

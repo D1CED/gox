@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gox/ai"
-	"gox/gox"
-	"gox/utils"
+	"github.com/D1CED/gox/ai"
+	"github.com/D1CED/gox/gox"
+	"github.com/D1CED/gox/utils"
 )
 
 func modeAI() {

@@ -1,6 +1,6 @@
 package ai
 
-import "gox/gox"
+import "github.com/D1CED/gox/gox"
 
 // type node struct{ b *gox.Board; row, column int }
 

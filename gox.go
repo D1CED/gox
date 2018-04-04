@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"gox/gox"
-	"gox/utils"
+	"github.com/D1CED/gox/gox"
+	"github.com/D1CED/gox/utils"
 )
 
 var (

@@ -5,7 +5,7 @@ package ai
 import (
 	"fmt"
 
-	"gox/gox"
+	"github.com/D1CED/gox/gox"
 )
 
 // difficulty type?
