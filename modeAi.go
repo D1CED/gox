@@ -24,7 +24,7 @@ func modeAI() {
 	} else {
 		aiSymb = 'X'
 	}
-	g := gox.NewAIGame(hum, aiSymb)
+	g := &gox.AIGame{Human: hum, ArtInt: aiSymb}
 
 	for g.Round() < gox.BoardSize {
 		var cur gox.Symbol

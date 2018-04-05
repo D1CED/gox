@@ -33,7 +33,7 @@ func main() {
 }
 
 func modeMP() {
-	g := gox.NewMPGame('X', 'O')
+	g := &gox.MPGame{Player1: 'X', Player2: 'O'}
 	// max 9 rounds or someone wins
 	for g.Round() < gox.BoardSize {
 		var s gox.Symbol
