@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"runtime"
-
 	"github.com/D1CED/gox/ai"
 	"github.com/D1CED/gox/gox"
 	"github.com/D1CED/gox/utils"
@@ -43,9 +40,7 @@ func modeAI() {
 			}
 			g.Board[r][c] = g.Human
 		} else {
-			fmt.Println("goroutines running:", runtime.NumGoroutine())
 			err := ai.Set(g, dfc)
-			fmt.Println("goroutines running:", runtime.NumGoroutine())
 			if err != nil {
 				panic(err)
 			}

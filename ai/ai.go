@@ -55,20 +55,16 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score, err 
 				error
 			}{scr, rc, err}:
 			case <-time.After(100 * time.Millisecond):
-				// fmt.Println("timed out")
 			}
 		}(rc, &cp, ch)
 	}
 	max, maxIdx := minScore, [2]int{0, 0}
-	fmt.Println("DEBUG:")
-	defer fmt.Println() // debug
 	for range free {
 		v := <-ch
 		scr, rc, err := v.Score, v.rc, v.error
 		if err != nil {
 			return 0, 0, 0, err
 		}
-		fmt.Printf("rc: (%v, %v) score: %v; ", rc[0], rc[1], scr) // debug
 		if scr == 10 {
 			return rc[0], rc[1], 10, nil
 		}
