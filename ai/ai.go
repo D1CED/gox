@@ -4,6 +4,7 @@ package ai
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/D1CED/gox/gox"
 )
@@ -47,11 +48,15 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score, err 
 			error
 		}) { // inline function-call
 			scr, err := Evaluate(g, rc[0], rc[1], difficulty)
-			ch <- struct {
+			select {
+			case ch <- struct {
 				Score
 				rc [2]int
 				error
-			}{scr, rc, err}
+			}{scr, rc, err}:
+			case <-time.After(100 * time.Millisecond):
+				// fmt.Println("timed out")
+			}
 		}(rc, &cp, ch)
 	}
 	max, maxIdx := minScore, [2]int{0, 0}
