@@ -20,7 +20,7 @@ func Set(g *gox.AIGame, difficulty int) error {
 // Evaluate returns a score from -10 to 10 for the given cell.
 func Evaluate(g *gox.AIGame, row, column, difficulty int) (Score, error) {
 	if g.Board[row][column] != 0 {
-		return 0, fmt.Errorf("Filed (%v, %v) already set in Evaluate.",
+		return 0, fmt.Errorf("field (%v, %v) already set in Evaluate",
 			row, column)
 	}
 	g.Board[row][column] = g.ArtInt
@@ -31,26 +31,45 @@ func Evaluate(g *gox.AIGame, row, column, difficulty int) (Score, error) {
 }
 
 // EvalFields returns the first cell with the greatest score and the score.
+// It executes paralel.
 func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score, err error) {
 	free := g.FreeFields()
-	scores := make([]Score, len(free))
-	for i, rc := range free {
-		scr, err := Evaluate(g, rc[0], rc[1], difficulty)
-		scores[i] = scr
-		if scr == 10 {
-			break
-		}
+	ch := make(chan struct {
+		Score
+		rc [2]int
+		error
+	}) //, len(free)
+	for _, rc := range free {
+		cp := *g // copy
+		go func(rc [2]int, g *gox.AIGame, ch chan<- struct {
+			Score
+			rc [2]int
+			error
+		}) { // inline function-call
+			scr, err := Evaluate(g, rc[0], rc[1], difficulty)
+			ch <- struct {
+				Score
+				rc [2]int
+				error
+			}{scr, rc, err}
+		}(rc, &cp, ch)
+	}
+	max, maxIdx := minScore, [2]int{0, 0}
+	fmt.Println("DEBUG:")
+	defer fmt.Println() // debug
+	for range free {
+		v := <-ch
+		scr, rc, err := v.Score, v.rc, v.error
 		if err != nil {
 			return 0, 0, 0, err
 		}
-	}
-	max, maxIdx := minScore, -1
-	for i, v := range scores {
-		if v > max {
-			maxIdx, max = i, v
+		fmt.Printf("rc: (%v, %v) score: %v; ", rc[0], rc[1], scr) // debug
+		if scr == 10 {
+			return rc[0], rc[1], 10, nil
+		}
+		if scr > max {
+			max, maxIdx = scr, rc
 		}
 	}
-	fmt.Printf("steps: %v; heuristics: %v\n", steps, scores) // debug
-	steps = 0
-	return free[maxIdx][0], free[maxIdx][1], max, nil
+	return maxIdx[0], maxIdx[1], max, nil
 }

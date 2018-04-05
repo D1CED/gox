@@ -3,15 +3,14 @@ package ai
 import "github.com/D1CED/gox/gox"
 
 // type node struct{ b *gox.Board; row, column int }
-
-var steps int
+// var steps int // debug, dosen't work in parallel context
 
 // negamax is the negamax algorithm for rating fileds in a tic-tac-toe board
 // for a given player. Provide a Board with rc already set.
 func negamax(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
 	maximize bool, depth int) Score {
 
-	steps++
+	// steps++
 	r, c := rc[0], rc[1]
 	symb := b[r][c]
 	var opp gox.Symbol
@@ -42,10 +41,12 @@ func negamax(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
 	return max(scores...)
 }
 
+// alphabeta is simmillar to negamax but with alpha-beta breaks to reduce the
+// amount of evaluated nodes.
 func alphabeta(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
 	maximize bool, depth int, alpha, beta Score) Score {
 
-	steps++
+	// steps++
 	r, c := rc[0], rc[1]
 	symb := b[r][c]
 	var opp gox.Symbol
