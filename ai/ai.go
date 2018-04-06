@@ -46,16 +46,16 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
 	}
 	free := g.FreeFields()
 	ch := make(chan positionScore) //, len(free)
-	for _, rc := range free {
+	for i := range free {
 		cp := *g // copy
-		go func(rc [2]int, g *gox.AIGame, ch chan<- positionScore) {
+		go func(rc [2]int) {
 			// difficulty from package-level scope
-			scr, err := Evaluate(g, rc[0], rc[1], difficulty)
+			scr, err := Evaluate(&cp, rc[0], rc[1], difficulty)
 			select {
 			case ch <- positionScore{scr, rc, err}:
 			case <-time.After(10 * time.Millisecond): // timeout
 			}
-		}(rc, &cp, ch)
+		}(free[i])
 	}
 	max, maxIdx := minScore, [2]int{0, 0}
 	for range free {

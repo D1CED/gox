@@ -23,9 +23,13 @@ func PrintWinDraw(b *gox.Board) bool {
 }
 
 // InputLoop prints a message and gives the user a choice from a string.
-// If the user enters  "q" it interrups the program.
+// If the user enters "q" it interrups the program.
 func InputLoop(msg string, s ...string) (string, error) {
 	for {
+		if len(s) == 0 {
+			return "", fmt.Errorf("bad function call. InputLoop "+
+				"invoked without user input choices.")
+		}
 		var inp string
 		fmt.Println(msg)
 		fmt.Printf("Enter one of the following expressions: %v.\n", s)
