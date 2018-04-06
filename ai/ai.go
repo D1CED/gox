@@ -14,8 +14,11 @@ import (
 // Set sets the first field with the greatest score to AIGame.ArtInt.
 func Set(g *gox.AIGame, difficulty int) error {
 	r, c, _, err := EvalFields(g, difficulty)
+	if err != nil {
+		return err
+	}
 	g.Board[r][c] = g.ArtInt
-	return err
+	return nil
 }
 
 // Evaluate returns a score from -10 to 10 for the given cell.
@@ -33,35 +36,31 @@ func Evaluate(g *gox.AIGame, row, column, difficulty int) (Score, error) {
 
 // EvalFields returns the first cell with the greatest score and the score.
 // It executes paralel.
-func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score, err error) {
-	free := g.FreeFields()
-	ch := make(chan struct {
-		Score
+func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
+	err error) {
+
+	type positionScore struct {
+		s  Score
 		rc [2]int
-		error
-	}) //, len(free)
+		e  error
+	}
+	free := g.FreeFields()
+	ch := make(chan positionScore) //, len(free)
 	for _, rc := range free {
 		cp := *g // copy
-		go func(rc [2]int, g *gox.AIGame, ch chan<- struct {
-			Score
-			rc [2]int
-			error
-		}) { // inline function-call
+		go func(rc [2]int, g *gox.AIGame, ch chan<- positionScore) {
+			// difficulty from package-level scope
 			scr, err := Evaluate(g, rc[0], rc[1], difficulty)
 			select {
-			case ch <- struct {
-				Score
-				rc [2]int
-				error
-			}{scr, rc, err}:
-			case <-time.After(100 * time.Millisecond):
+			case ch <- positionScore{scr, rc, err}:
+			case <-time.After(10 * time.Millisecond): // timeout
 			}
 		}(rc, &cp, ch)
 	}
 	max, maxIdx := minScore, [2]int{0, 0}
 	for range free {
 		v := <-ch
-		scr, rc, err := v.Score, v.rc, v.error
+		scr, rc, err := v.s, v.rc, v.e
 		if err != nil {
 			return 0, 0, 0, err
 		}
