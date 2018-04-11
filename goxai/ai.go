@@ -46,6 +46,7 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
 	}
 	free := g.FreeFields()
 	ch := make(chan positionScore) //, len(free)
+	done := make(chan struct{})
 	for i := range free {
 		cp := *g // copy
 		go func(rc [2]int) {
@@ -53,7 +54,7 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
 			scr, err := Evaluate(&cp, rc[0], rc[1], difficulty)
 			select {
 			case ch <- positionScore{scr, rc, err}:
-			case <-time.After(10 * time.Millisecond): // timeout
+			case <-done:
 			}
 		}(free[i])
 	}
@@ -62,9 +63,11 @@ func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
 		v := <-ch
 		scr, rc, err := v.s, v.rc, v.e
 		if err != nil {
+			close(done)
 			return 0, 0, 0, err
 		}
 		if scr == 10 {
+			close(done)
 			return rc[0], rc[1], 10, nil
 		}
 		if scr > max {
