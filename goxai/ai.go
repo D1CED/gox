@@ -4,7 +4,6 @@ package goxai
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/D1CED/gox/gox"
 )

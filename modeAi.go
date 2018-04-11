@@ -13,7 +13,7 @@ func modeAI() {
 	if dfc > 3 {
 		dfc = 3
 	}
-	ans, err := goxutils.InputLoop("Choose a side. X starts.", "X", "O")
+	ans, err := goxutil.InputLoop("Choose a side. X starts.", "X", "O")
 	if err != nil {
 		panic(err)
 	}
@@ -34,7 +34,7 @@ func modeAI() {
 			cur = 'O'
 		}
 		if cur == hum {
-			r, c, err := goxutils.FieldInp(&g.Board)
+			r, c, err := goxutil.FieldInp(&g.Board)
 			if err != nil {
 				panic(err)
 			}
@@ -45,7 +45,7 @@ func modeAI() {
 				panic(err)
 			}
 		}
-		if goxutils.PrintWinDraw(&g.Board) {
+		if goxutil.PrintWinDraw(&g.Board) {
 			return
 		}
 	}

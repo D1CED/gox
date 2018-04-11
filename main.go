@@ -42,12 +42,12 @@ func modeMP() {
 		} else {
 			s = g.Player2
 		}
-		r, c, err := goxutils.FieldInp(&g.Board)
+		r, c, err := goxutil.FieldInp(&g.Board)
 		if err != nil {
 			panic(err)
 		}
 		g.Board[r][c] = s
-		if goxutils.PrintWinDraw(&g.Board) {
+		if goxutil.PrintWinDraw(&g.Board) {
 			return
 		}
 	}
