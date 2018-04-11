@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/D1CED/gox/gox"
-	"github.com/D1CED/gox/utils"
+	"github.com/D1CED/gox/goxutil"
 )
 
 var (
@@ -42,12 +42,12 @@ func modeMP() {
 		} else {
 			s = g.Player2
 		}
-		r, c, err := utils.FieldInp(&g.Board)
+		r, c, err := goxutils.FieldInp(&g.Board)
 		if err != nil {
 			panic(err)
 		}
 		g.Board[r][c] = s
-		if utils.PrintWinDraw(&g.Board) {
+		if goxutils.PrintWinDraw(&g.Board) {
 			return
 		}
 	}

@@ -1,4 +1,4 @@
-package ai
+package goxai
 
 import "github.com/D1CED/gox/gox"
 

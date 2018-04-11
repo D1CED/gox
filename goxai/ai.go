@@ -1,6 +1,6 @@
-// Package ai provides a small API using the minimax algorithm with alpha-beta
+// Package goxai provides a small API using the minimax algorithm with alpha-beta
 // pruning.
-package ai
+package goxai
 
 import (
 	"fmt"

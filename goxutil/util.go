@@ -1,4 +1,4 @@
-package utils
+package goxutil
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ func PrintWinDraw(b *gox.Board) bool {
 func InputLoop(msg string, s ...string) (string, error) {
 	for {
 		if len(s) == 0 {
-			return "", fmt.Errorf("bad function call. InputLoop "+
+			return "", fmt.Errorf("bad function call. InputLoop " +
 				"invoked without user input choices.")
 		}
 		var inp string

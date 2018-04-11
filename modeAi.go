@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/D1CED/gox/ai"
 	"github.com/D1CED/gox/gox"
-	"github.com/D1CED/gox/utils"
+	"github.com/D1CED/gox/goxai"
+	"github.com/D1CED/gox/goxutil"
 )
 
 func modeAI() {
@@ -13,7 +13,7 @@ func modeAI() {
 	if dfc > 3 {
 		dfc = 3
 	}
-	ans, err := utils.InputLoop("Choose a side. X starts.", "X", "O")
+	ans, err := goxutils.InputLoop("Choose a side. X starts.", "X", "O")
 	if err != nil {
 		panic(err)
 	}
@@ -34,18 +34,18 @@ func modeAI() {
 			cur = 'O'
 		}
 		if cur == hum {
-			r, c, err := utils.FieldInp(&g.Board)
+			r, c, err := goxutils.FieldInp(&g.Board)
 			if err != nil {
 				panic(err)
 			}
 			g.Board[r][c] = g.Human
 		} else {
-			err := ai.Set(g, dfc)
+			err := goxai.Set(g, dfc)
 			if err != nil {
 				panic(err)
 			}
 		}
-		if utils.PrintWinDraw(&g.Board) {
+		if goxutils.PrintWinDraw(&g.Board) {
 			return
 		}
 	}
