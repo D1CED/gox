@@ -1,17 +1,13 @@
 // Package goxai provides a small API using the minimax algorithm with alpha-beta
 // pruning.
-package goxai
+package main
 
-import (
-	"fmt"
-
-	"github.com/D1CED/gox/gox"
-)
+import "fmt"
 
 // difficulty type?
 
 // Set sets the first field with the greatest score to AIGame.ArtInt.
-func Set(g *gox.AIGame, difficulty int) error {
+func Set(g *AIGame, difficulty int) error {
 	r, c, _, err := EvalFields(g, difficulty)
 	if err != nil {
 		return err
@@ -21,7 +17,7 @@ func Set(g *gox.AIGame, difficulty int) error {
 }
 
 // Evaluate returns a score from -10 to 10 for the given cell.
-func Evaluate(g *gox.AIGame, row, column, difficulty int) (Score, error) {
+func Evaluate(g *AIGame, row, column, difficulty int) (Score, error) {
 	if g.Board[row][column] != 0 {
 		return 0, fmt.Errorf("field (%v, %v) already set in Evaluate",
 			row, column)
@@ -35,7 +31,7 @@ func Evaluate(g *gox.AIGame, row, column, difficulty int) (Score, error) {
 
 // EvalFields returns the first cell with the greatest score and the score.
 // It executes paralel.
-func EvalFields(g *gox.AIGame, difficulty int) (row, column int, scr Score,
+func EvalFields(g *AIGame, difficulty int) (row, column int, scr Score,
 	err error) {
 
 	type positionScore struct {

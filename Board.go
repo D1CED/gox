@@ -1,4 +1,4 @@
-package gox
+package main
 
 import "fmt"
 
@@ -10,16 +10,15 @@ const BoardSize = 9
 
 // String returns you the game board as multi-line string. Preferably to print.
 func (b *Board) String() string {
-	return fmt.Sprintf(
-		`    1   2   3
-  -------------
+	return fmt.Sprintf(`    1   2   3
+  +---+---+---+
 a | %s | %s | %s |
-  -------------
+  +---+---+---+
 b | %s | %s | %s |
-  -------------
+  +---+---+---+
 c | %s | %s | %s |
-  -------------
-		`,
+  +---+---+---+
+`,
 		b[0][0], b[0][1], b[0][2], b[1][0], b[1][1], b[1][2],
 		b[2][0], b[2][1], b[2][2],
 	)

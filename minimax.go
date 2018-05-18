@@ -1,26 +1,24 @@
-package goxai
-
-import "github.com/D1CED/gox/gox"
+package main
 
 // type node struct{ b *gox.Board; row, column int }
 // var steps int // debug, dosen't work in parallel context
 
 // negamax is the negamax algorithm for rating fileds in a tic-tac-toe board
 // for a given player. Provide a Board with rc already set.
-func negamax(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
+func negamax(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
 	maximize bool, depth int) Score {
 
 	// steps++
 	r, c := rc[0], rc[1]
 	symb := b[r][c]
-	var opp gox.Symbol
+	var opp Symbol
 	if symb == 'X' {
 		opp = 'O'
 	} else {
 		opp = 'X'
 	}
 
-	if win, _ := b.CheckWin(); win || b.Round() == gox.BoardSize ||
+	if win, _ := b.CheckWin(); win || b.Round() == BoardSize ||
 		depth == 0 {
 		if !maximize {
 			return -eval(b, rc)
@@ -43,20 +41,20 @@ func negamax(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
 
 // alphabeta is simmillar to negamax but with alpha-beta breaks to reduce the
 // amount of evaluated nodes.
-func alphabeta(b *gox.Board, rc [2]int, eval func(*gox.Board, [2]int) Score,
+func alphabeta(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
 	maximize bool, depth int, alpha, beta Score) Score {
 
 	// steps++
 	r, c := rc[0], rc[1]
 	symb := b[r][c]
-	var opp gox.Symbol
+	var opp Symbol
 	if symb == 'X' {
 		opp = 'O'
 	} else {
 		opp = 'X'
 	}
 
-	if win, _ := b.CheckWin(); win || b.Round() == gox.BoardSize ||
+	if win, _ := b.CheckWin(); win || b.Round() == BoardSize ||
 		depth == 0 {
 		if !maximize {
 			return -eval(b, rc)

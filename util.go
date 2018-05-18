@@ -1,20 +1,18 @@
-package goxutil
+package main
 
 import (
 	"fmt"
 	"os"
-
-	"github.com/D1CED/gox/gox"
 )
 
 // PrintWinDraw returns true if win or draw happend and prints this on screen.
-func PrintWinDraw(b *gox.Board) bool {
+func PrintWinDraw(b *Board) bool {
 	if win, symb := b.CheckWin(); win {
 		fmt.Printf("Player %c wins. Congrats!\n", symb)
 		fmt.Println(b)
 		return true
 	}
-	if b.Round() == gox.BoardSize {
+	if b.Round() == BoardSize {
 		fmt.Println("Oh, a draw.")
 		fmt.Println(b)
 		return true
@@ -53,7 +51,7 @@ func InputLoop(msg string, s ...string) (string, error) {
 }
 
 // FieldInp blaah with low level shit hacks
-func FieldInp(b *gox.Board) (row, col int, err error) {
+func FieldInp(b *Board) (row, col int, err error) {
 	free := b.FreeFields()
 	choose := make([]string, len(free))
 	for i, rc := range free {

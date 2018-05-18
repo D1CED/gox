@@ -3,9 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"github.com/D1CED/gox/gox"
-	"github.com/D1CED/gox/goxutil"
 )
 
 var (
@@ -33,21 +30,21 @@ func main() {
 }
 
 func modeMP() {
-	g := &gox.MPGame{Player1: 'X', Player2: 'O'}
+	g := &MPGame{Player1: 'X', Player2: 'O'}
 	// max 9 rounds or someone wins
-	for g.Round() < gox.BoardSize {
-		var s gox.Symbol
+	for g.Round() < BoardSize {
+		var s Symbol
 		if g.Round()%2 == 0 {
 			s = g.Player1
 		} else {
 			s = g.Player2
 		}
-		r, c, err := goxutil.FieldInp(&g.Board)
+		r, c, err := FieldInp(&g.Board)
 		if err != nil {
 			panic(err)
 		}
 		g.Board[r][c] = s
-		if goxutil.PrintWinDraw(&g.Board) {
+		if PrintWinDraw(&g.Board) {
 			return
 		}
 	}

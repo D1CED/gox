@@ -1,4 +1,4 @@
-package gox
+package main
 
 // MPGame represents a tic-tac-toe game with a board and two players.
 type MPGame struct {

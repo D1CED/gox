@@ -1,6 +1,4 @@
-package goxai
-
-import "github.com/D1CED/gox/gox"
+package main
 
 // Score is a pseudo value rating a cell of a game. Higher values means more
 // likelyhood to win.
@@ -18,11 +16,11 @@ const (
 )
 
 // unsidedFieldEval rates a set field from 0 to 10.
-func unsidedFieldEval(b *gox.Board, rc [2]int) Score {
+func unsidedFieldEval(b *Board, rc [2]int) Score {
 	if win, _ := b.CheckWin(); win {
 		return Win
 	}
-	if b.Round() == gox.BoardSize {
+	if b.Round() == BoardSize {
 		return Tie
 	}
 	var s Score
