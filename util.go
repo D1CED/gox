@@ -50,16 +50,17 @@ func InputLoop(msg string, s ...string) (string, error) {
 	}
 }
 
-// FieldInp blaah with low level shit hacks
-func FieldInp(b *Board) (f Field, err error) {
+// FieldInp let the user choose from fre fields.
+// featuring custom iota/atoi implementation
+func FieldInp(b *Board) (Field, error) {
 	free := b.FreeFields()
 	choose := make([]string, len(free))
-	for i, rc := range free {
-		choose[i] = fmt.Sprintf("%c%c", rc.row+97, rc.col+49)
+	for i, f := range free {
+		choose[i] = fmt.Sprintf("%c%c", f.row+97, f.col+49)
 	}
 	choice, err := InputLoop(b.String(), choose...)
 	if err != nil {
-		return
+		return Field{}, err
 	}
-	return Field{int(byte(choice[0]) - 97), int(byte(choice[1]) - 49)}, nil
+	return Field{int(choice[0] - 97), int(choice[1] - 49)}, nil
 }

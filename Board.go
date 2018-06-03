@@ -74,3 +74,28 @@ func (b *Board) FreeFields() []Field {
 	}
 	return free
 }
+
+// MPGame represents a tic-tac-toe game with a board and two players.
+type MPGame struct {
+	Player1 Symbol
+	Player2 Symbol
+	Board
+}
+
+// AIGame represents a tic-tac-toe game with one player being human, the other
+// being an ai.
+type AIGame struct {
+	Human  Symbol
+	ArtInt Symbol
+	Board
+}
+
+// Symbol holds a character representing a player. Make sure they are uniqe and non-zero.
+type Symbol byte
+
+func (s Symbol) String() string {
+	if s == 0 {
+		return " "
+	}
+	return fmt.Sprintf("%c", s)
+}

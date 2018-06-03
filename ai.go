@@ -8,10 +8,9 @@ import "fmt"
 // difficulty type?
 
 // Set sets the first field with the greatest score to AIGame.ArtInt.
-func Set(g *AIGame, difficulty int) error {
+func Set(g *AIGame, difficulty int) {
 	f, _ := EvalFields(g, difficulty)
 	g.Board[f.row][f.col] = g.ArtInt
-	return nil
 }
 
 // Evaluate returns a score from -10 to 10 for the given cell.
@@ -21,34 +20,34 @@ func Evaluate(g *AIGame, f Field, difficulty int) Score {
 			f.row, f.col))
 	}
 	g.Board[f.row][f.col] = g.ArtInt
-	scr := alphabeta(&g.Board, Field{f.row, f.col}, unsidedFieldEval,
+	s := alphabeta(&g.Board, Field{f.row, f.col}, unsidedFieldEval,
 		true, difficulty*2, -200, 200)
 	g.Board[f.row][f.col] = 0
-	return scr
+	return s
 }
 
 // EvalFields returns the first cell with the greatest score and the score.
 // It executes paralel.
 func EvalFields(g *AIGame, difficulty int) (Field, Score) {
-
-	type positionScore struct {
+	type fieldScore struct {
 		s Score
 		f Field
 	}
 	free := g.FreeFields()
-	ch := make(chan positionScore) //, len(free)
+
+	ch := make(chan fieldScore) //, len(free)
 	done := make(chan struct{})
 	defer close(done)
-	for i := range free {
+	for _, f := range free {
 		cp := *g // copy
 		go func(f Field) {
 			// difficulty from package-level scope
 			scr := Evaluate(&cp, f, difficulty)
 			select {
-			case ch <- positionScore{scr, f}:
+			case ch <- fieldScore{scr, f}:
 			case <-done:
 			}
-		}(free[i])
+		}(f)
 	}
 	max, maxIdx := minScore, Field{0, 0}
 	for range free {

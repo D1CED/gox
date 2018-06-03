@@ -1,8 +1,17 @@
+/*
+	autor: Jannis Hoffmann
+	This is the TicTacGo-Package.
+	It provides a standard interface over a
+*/
+
+// Package gox provides defines basic datatypes and methods for creating a
+// simple tic-tac-toe game.
 package main
 
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 func setup() (mode string, difficulty int) {
@@ -50,6 +59,43 @@ func modeMP() {
 		g.Board[f.row][f.col] = s
 		if PrintWinDraw(&g.Board) {
 			break
+		}
+	}
+}
+
+func modeAI(dfc int) {
+	ans, err := InputLoop("Choose a side. X starts.", "X", "O")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	hum := Symbol(ans[0])
+	var aiSymb Symbol
+	if hum == 'X' {
+		aiSymb = 'O'
+	} else {
+		aiSymb = 'X'
+	}
+	g := &AIGame{Human: hum, ArtInt: aiSymb}
+
+	for g.Round() < BoardSize {
+		var cur Symbol
+		if g.Round()%2 == 0 {
+			cur = 'X'
+		} else {
+			cur = 'O'
+		}
+		if cur == hum {
+			f, err := FieldInp(&g.Board)
+			if err != nil {
+				panic(err)
+			}
+			g.Board[f.row][f.col] = g.Human
+		} else {
+			Set(g, dfc)
+		}
+		if PrintWinDraw(&g.Board) {
+			return
 		}
 	}
 }
