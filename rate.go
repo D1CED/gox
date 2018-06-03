@@ -4,6 +4,9 @@ package main
 // likelyhood to win.
 type Score int
 
+// FieldScore is a function that rates a filed of the board with a score
+type FieldScore func(*Board, Field) Score
+
 // Constants denoting common score values.
 const (
 	maxScore = Score(^uint(0) >> 1)
@@ -16,7 +19,7 @@ const (
 )
 
 // unsidedFieldEval rates a set field from 0 to 10.
-func unsidedFieldEval(b *Board, rc [2]int) Score {
+func unsidedFieldEval(b *Board, rc Field) Score {
 	if win, _ := b.CheckWin(); win {
 		return Win
 	}
@@ -25,11 +28,11 @@ func unsidedFieldEval(b *Board, rc [2]int) Score {
 	}
 	var s Score
 	switch rc {
-	case [2]int{1, 1}:
+	case Field{1, 1}:
 		s = 2
-	case [2]int{0, 0}, [2]int{2, 0}, [2]int{0, 2}, [2]int{2, 2}:
+	case Field{0, 0}, Field{2, 0}, Field{0, 2}, Field{2, 2}:
 		s = 1
-	case [2]int{0, 1}, [2]int{1, 0}, [2]int{1, 2}, [2]int{2, 1}:
+	case Field{0, 1}, Field{1, 0}, Field{1, 2}, Field{2, 1}:
 		s = 0
 	}
 	return s

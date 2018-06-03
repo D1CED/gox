@@ -1,15 +1,15 @@
 package main
 
-func modeAI() {
-	if dfc < 0 {
-		dfc = 0
-	}
-	if dfc > 3 {
-		dfc = 3
-	}
+import (
+	"fmt"
+	"os"
+)
+
+func modeAI(dfc int) {
 	ans, err := InputLoop("Choose a side. X starts.", "X", "O")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 	hum := Symbol(ans[0])
 	var aiSymb Symbol
@@ -28,11 +28,11 @@ func modeAI() {
 			cur = 'O'
 		}
 		if cur == hum {
-			r, c, err := FieldInp(&g.Board)
+			f, err := FieldInp(&g.Board)
 			if err != nil {
 				panic(err)
 			}
-			g.Board[r][c] = g.Human
+			g.Board[f.row][f.col] = g.Human
 		} else {
 			err := Set(g, dfc)
 			if err != nil {

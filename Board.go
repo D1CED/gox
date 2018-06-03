@@ -6,11 +6,15 @@ import "fmt"
 // lower right.
 type Board [3][3]Symbol
 
-const BoardSize = 9
+// Field represents one filed of the Board.
+type Field struct{ row, col int }
+
+const BoardSize = 3 * 3
 
 // String returns you the game board as multi-line string. Preferably to print.
 func (b *Board) String() string {
-	return fmt.Sprintf(`    1   2   3
+	return fmt.Sprintf(`
+    1   2   3
   +---+---+---+
 a | %s | %s | %s |
   +---+---+---+
@@ -59,12 +63,12 @@ func (b *Board) Round() int {
 }
 
 // FreeFields returns a slice containig (row, col) of unset fields.
-func (b *Board) FreeFields() [][2]int {
-	free := make([][2]int, 0, 9)
+func (b *Board) FreeFields() []Field {
+	free := make([]Field, 0, 9)
 	for idx := range b {
 		for jdx, elm := range b[idx] {
 			if elm == 0 {
-				free = append(free, [2]int{idx, jdx})
+				free = append(free, Field{idx, jdx})
 			}
 		}
 	}

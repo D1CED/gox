@@ -3,6 +3,7 @@ package main
 // type node struct{ b *gox.Board; row, column int }
 // var steps int // debug, dosen't work in parallel context
 
+/*
 // negamax is the negamax algorithm for rating fileds in a tic-tac-toe board
 // for a given player. Provide a Board with rc already set.
 func negamax(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
@@ -38,14 +39,20 @@ func negamax(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
 	}
 	return max(scores...)
 }
+*/
 
-// alphabeta is simmillar to negamax but with alpha-beta breaks to reduce the
+// aiPickFiled is a wrapper around alphabeta for easier usage.
+func aiPickFiled(b *Board, rc Field, dfc int) Score {
+	return alphabeta(b, rc, unsidedFieldEval, true, dfc*2, -200, 200)
+}
+
+// alphabeta is simmillar to negamax but with alpha-beta punning to reduce the
 // amount of evaluated nodes.
-func alphabeta(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
-	maximize bool, depth int, alpha, beta Score) Score {
+func alphabeta(b *Board, rc Field, eval FieldScore, maximize bool, depth int,
+	alpha, beta Score) Score {
 
 	// steps++
-	r, c := rc[0], rc[1]
+	r, c := rc.row, rc.col
 	symb := b[r][c]
 	var opp Symbol
 	if symb == 'X' {
@@ -64,11 +71,11 @@ func alphabeta(b *Board, rc [2]int, eval func(*Board, [2]int) Score,
 
 	scores := make([]Score, 0, len(b.FreeFields()))
 	for _, rc := range b.FreeFields() {
-		b[rc[0]][rc[1]] = opp
+		b[rc.row][rc.col] = opp
 		s := -alphabeta(b, rc, eval, !maximize, depth-1, -beta, -alpha)
 		alpha = max(alpha, s)
 		scores = append(scores, s)
-		b[rc[0]][rc[1]] = 0
+		b[rc.row][rc.col] = 0
 		if alpha >= beta {
 			break
 		}

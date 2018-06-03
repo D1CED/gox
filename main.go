@@ -5,28 +5,32 @@ import (
 	"fmt"
 )
 
-var (
-	mode string
-	dfc  int
-)
+func setup() (mode string, difficulty int) {
+	m := flag.String("m", "AI", "Choose your gamemode 'AI' or 'MP'")
+	dfc := flag.Int("d", 3, "Set difficulty for AI. 1 to 3.")
+	flag.Parse()
+	if *dfc < 0 {
+		*dfc = 0
+	}
+	if *dfc > 3 {
+		*dfc = 3
+	}
+	return *m, *dfc
+}
 
 // parses flags and picks gamemode.
 func main() {
-	flag.StringVar(&mode, "m", "AI", "Choose your gamemode 'AI' or 'MP'")
-	flag.IntVar(&dfc, "d", 3, "Set difficulty for AI. 1 to 3.")
-	flag.Parse()
-
+	mode, dfc := setup()
 	fmt.Println("Welcome to gox. A tic-tac-toe game.")
 
 	switch mode {
 	case "AI", "Ai", "ai", "A", "a":
-		modeAI()
-		return
+		modeAI(dfc)
 	case "MP", "Mp", "mp", "M", "m":
 		modeMP()
-		return
+	default:
+		fmt.Printf("No such mode '%s'. Quitting...\n", mode)
 	}
-	fmt.Printf("No such mode '%s'. Quitting...\n", mode)
 }
 
 func modeMP() {
@@ -39,13 +43,13 @@ func modeMP() {
 		} else {
 			s = g.Player2
 		}
-		r, c, err := FieldInp(&g.Board)
+		f, err := FieldInp(&g.Board)
 		if err != nil {
 			panic(err)
 		}
-		g.Board[r][c] = s
+		g.Board[f.row][f.col] = s
 		if PrintWinDraw(&g.Board) {
-			return
+			break
 		}
 	}
 }

@@ -51,15 +51,15 @@ func InputLoop(msg string, s ...string) (string, error) {
 }
 
 // FieldInp blaah with low level shit hacks
-func FieldInp(b *Board) (row, col int, err error) {
+func FieldInp(b *Board) (f Field, err error) {
 	free := b.FreeFields()
 	choose := make([]string, len(free))
 	for i, rc := range free {
-		choose[i] = fmt.Sprintf("%c%c", rc[0]+97, rc[1]+49)
+		choose[i] = fmt.Sprintf("%c%c", rc.row+97, rc.col+49)
 	}
 	choice, err := InputLoop(b.String(), choose...)
 	if err != nil {
 		return
 	}
-	return int(byte(choice[0]) - 97), int(byte(choice[1]) - 49), nil
+	return Field{int(byte(choice[0]) - 97), int(byte(choice[1]) - 49)}, nil
 }

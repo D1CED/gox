@@ -1,5 +1,6 @@
-// Package goxai provides a small API using the minimax algorithm with alpha-beta
-// pruning.
+// Package goxai provides a small API using the minimax algorithm with
+// alpha-beta pruning.
+
 package main
 
 import "fmt"
@@ -8,36 +9,31 @@ import "fmt"
 
 // Set sets the first field with the greatest score to AIGame.ArtInt.
 func Set(g *AIGame, difficulty int) error {
-	r, c, _, err := EvalFields(g, difficulty)
-	if err != nil {
-		return err
-	}
-	g.Board[r][c] = g.ArtInt
+	f, _ := EvalFields(g, difficulty)
+	g.Board[f.row][f.col] = g.ArtInt
 	return nil
 }
 
 // Evaluate returns a score from -10 to 10 for the given cell.
-func Evaluate(g *AIGame, row, column, difficulty int) (Score, error) {
-	if g.Board[row][column] != 0 {
-		return 0, fmt.Errorf("field (%v, %v) already set in Evaluate",
-			row, column)
+func Evaluate(g *AIGame, f Field, difficulty int) Score {
+	if g.Board[f.row][f.col] != 0 {
+		panic(fmt.Errorf("field (%v, %v) already set in Evaluate",
+			f.row, f.col))
 	}
-	g.Board[row][column] = g.ArtInt
-	scr := alphabeta(&g.Board, [2]int{row, column}, unsidedFieldEval,
+	g.Board[f.row][f.col] = g.ArtInt
+	scr := alphabeta(&g.Board, Field{f.row, f.col}, unsidedFieldEval,
 		true, difficulty*2, -200, 200)
-	g.Board[row][column] = 0
-	return scr, nil
+	g.Board[f.row][f.col] = 0
+	return scr
 }
 
 // EvalFields returns the first cell with the greatest score and the score.
 // It executes paralel.
-func EvalFields(g *AIGame, difficulty int) (row, column int, scr Score,
-	err error) {
+func EvalFields(g *AIGame, difficulty int) (Field, Score) {
 
 	type positionScore struct {
-		s  Score
-		rc [2]int
-		e  error
+		s Score
+		f Field
 	}
 	free := g.FreeFields()
 	ch := make(chan positionScore) //, len(free)
@@ -45,28 +41,25 @@ func EvalFields(g *AIGame, difficulty int) (row, column int, scr Score,
 	defer close(done)
 	for i := range free {
 		cp := *g // copy
-		go func(rc [2]int) {
+		go func(f Field) {
 			// difficulty from package-level scope
-			scr, err := Evaluate(&cp, rc[0], rc[1], difficulty)
+			scr := Evaluate(&cp, f, difficulty)
 			select {
-			case ch <- positionScore{scr, rc, err}:
+			case ch <- positionScore{scr, f}:
 			case <-done:
 			}
 		}(free[i])
 	}
-	max, maxIdx := minScore, [2]int{0, 0}
+	max, maxIdx := minScore, Field{0, 0}
 	for range free {
 		v := <-ch
-		scr, rc, err := v.s, v.rc, v.e
-		if err != nil {
-			return 0, 0, 0, err
-		}
+		scr, f := v.s, v.f
 		if scr == 10 {
-			return rc[0], rc[1], 10, nil
+			return f, 10
 		}
 		if scr > max {
-			max, maxIdx = scr, rc
+			max, maxIdx = scr, f
 		}
 	}
-	return maxIdx[0], maxIdx[1], max, nil
+	return maxIdx, max
 }
