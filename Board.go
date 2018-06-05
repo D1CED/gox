@@ -93,6 +93,8 @@ type AIGame struct {
 // Symbol holds a character representing a player. Make sure they are uniqe and non-zero.
 type Symbol byte
 
+const X, O = 'X', 'O'
+
 func (s Symbol) String() string {
 	if s == 0 {
 		return " "

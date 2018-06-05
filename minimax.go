@@ -52,10 +52,10 @@ func alphabeta(b *Board, rc Field, eval FieldScore, maximize bool, depth int,
 	r, c := rc.row, rc.col
 	symb := b[r][c]
 	var opp Symbol
-	if symb == 'X' {
-		opp = 'O'
+	if symb == X {
+		opp = O
 	} else {
-		opp = 'X'
+		opp = X
 	}
 
 	if win, _ := b.CheckWin(); win || b.Round() == BoardSize ||

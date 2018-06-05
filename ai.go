@@ -16,8 +16,7 @@ func Set(g *AIGame, difficulty int) {
 // Evaluate returns a score from -10 to 10 for the given cell.
 func Evaluate(g *AIGame, f Field, difficulty int) Score {
 	if g.Board[f.row][f.col] != 0 {
-		panic(fmt.Errorf("field (%v, %v) already set in Evaluate",
-			f.row, f.col))
+		panic(fmt.Errorf("field %+v already set in Evaluate", f))
 	}
 	g.Board[f.row][f.col] = g.ArtInt
 	s := alphabeta(&g.Board, Field{f.row, f.col}, unsidedFieldEval,

@@ -43,7 +43,7 @@ func main() {
 }
 
 func modeMP() {
-	g := &MPGame{Player1: 'X', Player2: 'O'}
+	g := &MPGame{Player1: X, Player2: O}
 	// max 9 rounds or someone wins
 	for g.Round() < BoardSize {
 		var s Symbol
@@ -71,19 +71,19 @@ func modeAI(dfc int) {
 	}
 	hum := Symbol(ans[0])
 	var aiSymb Symbol
-	if hum == 'X' {
-		aiSymb = 'O'
+	if hum == X {
+		aiSymb = O
 	} else {
-		aiSymb = 'X'
+		aiSymb = X
 	}
 	g := &AIGame{Human: hum, ArtInt: aiSymb}
 
 	for g.Round() < BoardSize {
 		var cur Symbol
 		if g.Round()%2 == 0 {
-			cur = 'X'
+			cur = X
 		} else {
-			cur = 'O'
+			cur = O
 		}
 		if cur == hum {
 			f, err := FieldInp(&g.Board)
