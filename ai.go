@@ -33,6 +33,9 @@ func EvalFields(g *AIGame, difficulty int) (Field, Score) {
 		f Field
 	}
 	free := g.FreeFields()
+	if len(free) == 0 {
+		panic(fmt.Errorf("match %v is already over", g))
+	}
 
 	ch := make(chan fieldScore) //, len(free)
 	done := make(chan struct{})
@@ -48,7 +51,7 @@ func EvalFields(g *AIGame, difficulty int) (Field, Score) {
 			}
 		}(f)
 	}
-	max, maxIdx := minScore, Field{0, 0}
+	max, maxIdx := Loss-1, Field{0, 0}
 	for range free {
 		v := <-ch
 		scr, f := v.s, v.f

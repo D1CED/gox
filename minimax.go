@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Score is a pseudo value rating a cell of a game. Higher values means more
 // likelyhood to win.
 type Score int
@@ -9,14 +11,25 @@ type FieldScore func(*Board, Field) Score
 
 // Constants denoting common score values.
 const (
-	maxScore = Score(^uint(0) >> 1)
-	Win      = Score(10)
-	twoRow   = Score(5)
-	oneRow   = Score(2)
-	Tie      = Score(0)
-	Loss     = Score(-10)
-	minScore = -(Score(^uint(0) >> 1)) - 1
+	Win    Score = 10
+	twoRow Score = 5
+	oneRow Score = 2
+	Tie    Score = 0
+	Loss   Score = -10
 )
+
+func (s Score) String() string {
+	switch s {
+	case 10:
+		return "Win"
+	case -10:
+		return "Loss"
+	case 0:
+		return "Tie"
+	default:
+		return fmt.Sprintf("%d", s)
+	}
+}
 
 // unsidedFieldEval rates a set field from 0 to 10.
 func unsidedFieldEval(b *Board, rc Field) Score {
@@ -84,7 +97,10 @@ func alphabeta(b *Board, rc Field, eval FieldScore, maximize bool, depth int,
 }
 
 func max(i ...Score) Score {
-	max := minScore
+	if len(i) == 0 {
+		return 0
+	}
+	max := i[0]
 	for _, v := range i {
 		if v > max {
 			max = v
